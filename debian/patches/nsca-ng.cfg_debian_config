@@ -1,10 +1,8 @@
 Description: Debian specific settings
 Author: Alexander Wirt <formorer@debian.org>
 
-Index: pkg-nsca-ng/etc/nsca-ng.cfg
-===================================================================
---- pkg-nsca-ng.orig/etc/nsca-ng.cfg	2013-02-26 09:50:22.734377162 +0100
-+++ pkg-nsca-ng/etc/nsca-ng.cfg	2013-02-26 09:52:40.542382528 +0100
+--- a/etc/nsca-ng.cfg
++++ b/etc/nsca-ng.cfg
 @@ -8,8 +8,30 @@
  #
  # Most probably, you'll have to specify the path to the Nagios command file.
@@ -24,7 +22,7 @@ Index: pkg-nsca-ng/etc/nsca-ng.cfg
 +
 +# This authorization line only allows pinging of the server, but you probably
 +# want to change the password if you go into production
-+authorization "*" {
++authorize "*" {
 +	password = 'change-me'
 +}
 +
