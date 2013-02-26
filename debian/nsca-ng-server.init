@@ -68,7 +68,7 @@ fi
 DAEMONCTL="start-stop-daemon --quiet --pidfile $PIDFILE --exec $DAEMON"
 
 check_started() {
-	if status_of_proc "$DAEMON" "$DESC"
+	if ! start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON --test > /dev/null
 	then
 		return 0 #is started
 	else
@@ -98,8 +98,6 @@ start)
 	if ! check_started
 	then
 		$DAEMONCTL --start -- $DAEMONARGS
-	else
-		log_warning_msg "already running!"
 	fi
 	log_end_msg $?
 	;;
