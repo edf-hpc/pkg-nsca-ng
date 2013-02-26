@@ -35,6 +35,11 @@ CFGFILE="/etc/nsca-ng/nsca-ng.cfg"
 # Load the VERBOSE setting and other rcS variables
 . /lib/init/vars.sh
 
+if [ "$NSCA-NG" != "yes"  ]; then
+	log_warning_msg "Not starting nsca-ng - edit /etc/default/nsca-ng-server to enable it"
+	exit 0
+fi
+
 if [ -r "$CFGFILE" ]
 then
 	: ${DAEMONUSER:="$(sed -r -n "s/^[[:blank:]]*user[[:blank:]]*=[[:blank:]]*[\"']?([^\"'#[:blank:]]+).*/\1/p" "$CFGFILE")"}
@@ -58,14 +63,44 @@ then
 fi
 
 # Set the default command line arguments.
-: ${DAEMONARGS:="-P $PIDFILE -c $CFGFILE"}
+: ${DAEMONARGS:="-P $PIDFILE -c $CFGFILE -s"}
 
 DAEMONCTL="start-stop-daemon --quiet --pidfile $PIDFILE --exec $DAEMON"
+
+check_started() {
+	if status_of_proc "$DAEMON" "$DESC"
+	then
+		return 0 #is started
+	else
+		return 1 #isn't started
+	fi
+}
+
+status()
+{
+  log_action_begin_msg "checking $DAEMON"
+  if check_started; then
+    log_action_end_msg 0 "running"
+  else
+    if [ -e "$PIDFILE" ]; then
+      log_action_end_msg 1 "$DAEMON failed"
+      exit 1
+    else
+      log_action_end_msg 1 "not running"
+      exit 3
+    fi  
+  fi  
+}
 
 case $1 in
 start)
 	log_daemon_msg "Starting $DESC" "$NAME"
-	$DAEMONCTL --start -- $DAEMONARGS
+	if ! check_started
+	then
+		$DAEMONCTL --start -- $DAEMONARGS
+	else
+		log_warning_msg "already running!"
+	fi
 	log_end_msg $?
 	;;
 stop)
@@ -82,7 +117,7 @@ reload|force-reload)
 	log_end_msg $?
 	;;
 status)
-	status_of_proc "$DAEMON" "$DESC" && exit 0 || exit $?
+	status
 	;;
 *)
 	echo >&2 "Usage: $0 {start|stop|status|restart|reload|force-reload}"
