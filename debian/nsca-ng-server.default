@@ -4,4 +4,4 @@
 # how to get nsca-ng working
 
 # start nsca-ng daemon (no/yes)
-NSCA-NG=no
+NSCA_NG=no

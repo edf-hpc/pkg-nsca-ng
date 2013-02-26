@@ -27,7 +27,7 @@ CFGFILE="/etc/nsca-ng/nsca-ng.cfg"
 [ -x "$DAEMON" ] || exit 0
 
 # Read configuration variable file if it is present.
-[ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
+[ -r "/etc/default/${NAME}-server" ] && . "/etc/default/${NAME}-server"
 
 # Define LSB log_* functions.
 . '/lib/lsb/init-functions'
@@ -35,7 +35,7 @@ CFGFILE="/etc/nsca-ng/nsca-ng.cfg"
 # Load the VERBOSE setting and other rcS variables
 . /lib/init/vars.sh
 
-if [ "$NSCA-NG" != "yes"  ]; then
+if [ "${NSCA_NG}" != "yes"  ]; then
 	log_warning_msg "Not starting nsca-ng - edit /etc/default/nsca-ng-server to enable it"
 	exit 0
 fi
