@@ -13,7 +13,7 @@ Author: Alexander Wirt <formorer@debian.org>
 +command_file = "/var/lib/nagios3/rw/nagios.cmd"
 +
 +# command_file for icinga
-+#command_file=/var/lib/icinga/rw/icinga.cmd
++#command_file= "/var/lib/icinga/rw/icinga.cmd"
 +
 +# Debian specific settings
 +listen = "localhost:5668" # only listen on localhost
