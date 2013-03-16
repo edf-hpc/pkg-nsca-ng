@@ -1,3 +1,10 @@
+nsca-ng (1.0-1) UNRELEASED; urgency=low
+
+  * [47cbbe8] Remove unused file
+  * [3f96ec7] Imported Upstream version 1.0
+
+ -- Alexander Wirt <alexander.wirt@credativ.de>  Sat, 16 Mar 2013 11:13:02 +0100
+
 nsca-ng (0.3-1) unstable; urgency=low
 
   * Initial release
