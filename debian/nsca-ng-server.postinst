@@ -26,7 +26,7 @@ case "$1" in
         # explicitly set some permissions
         setperm root root 0600 /etc/nsca-ng/nsca-ng.cfg
 
-        test -d /var/run/nsca-ng
+        test -d /var/run/nsca-ng || mkdir /var/run/nsca-ng
         setperm nagios nagios 0700 /var/run/nsca-ng
 
     ;;
