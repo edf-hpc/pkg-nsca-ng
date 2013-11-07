@@ -1,3 +1,9 @@
+nsca-ng (1.2-1) unstable; urgency=low
+
+  * [594ee2f] Imported Upstream version 1.2
+
+ -- Alexander Wirt <formorer@debian.org>  Thu, 07 Nov 2013 07:06:20 +0100
+
 nsca-ng (1.1-1) unstable; urgency=low
 
   * [47cbbe8] Remove unused file
