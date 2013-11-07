@@ -36,6 +36,9 @@
 /* Define to 1 to use the syscall interface for clock_gettime */
 #undef HAVE_CLOCK_SYSCALL
 
+/* Define to 1 if you have the `closefrom' function. */
+#undef HAVE_CLOSEFROM
+
 /* Define to 1 if you have the `daemon' function. */
 #undef HAVE_DAEMON
 
@@ -183,6 +186,12 @@
 /* Define to 1 if `thousands_sep' is a member of `struct lconv'. */
 #undef HAVE_STRUCT_LCONV_THOUSANDS_SEP
 
+/* Define to 1 if the system has the type `struct sockaddr_in6'. */
+#undef HAVE_STRUCT_SOCKADDR_IN6
+
+/* Define to 1 if the system has the type `struct sockaddr_storage'. */
+#undef HAVE_STRUCT_SOCKADDR_STORAGE
+
 /* Define to 1 if you have the <sys/epoll.h> header file. */
 #undef HAVE_SYS_EPOLL_H
 
@@ -245,9 +254,6 @@
 
 /* Define to 1 if you have the `__va_copy' function or macro. */
 #undef HAVE___VA_COPY
-
-/* Define to 1 if your C compiler doesn't accept -c and -o together. */
-#undef NO_MINUS_C_MINUS_O
 
 /* Name of package */
 #undef PACKAGE
