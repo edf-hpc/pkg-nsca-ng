@@ -1,4 +1,258 @@
-2013-04-12  Holger Weiß  <holger@weiss.in-berlin.de>
+2013-11-06  Holger Weiss  <holger@weiss.in-berlin.de>
+
+	* NEWS, configure.ac: NSCA-ng 1.2
+
+	* NEWS: Let list markers start at the left margin
+
+	List markers usually (though not necessarily) start at the left margin in
+	Markdown files.  Vim's syntax highlighting stumbles a bit if they don't.
+
+2013-09-20  Holger Weiss  <holger@weiss.in-berlin.de>
+
+	* README.md: Add symbolic link: README.md -> README
+
+	Add a symbolic link so that some web-based Git hosting services render
+	the README file as Markdown.
+
+2013-09-12  Holger Weiss  <holger@weiss.in-berlin.de>
+
+	* src/client/parse.c: Cast time_t value to unsigned long for *printf(3)
+
+	Prevent crash on platforms where sizeof(time_t) > sizeof(unsigned long),
+	see <http://thread.gmane.org/gmane.os.openbsd.ports/63555>.
+
+	Thanks to Florian Obser and Stuart Henderson for reporting this issue.
+
+2013-08-17  Holger Weiss  <holger@weiss.in-berlin.de>
+
+	* PROTOCOL: Fix a little typo
+
+2013-08-06  Holger Weiss  <holger@weiss.in-berlin.de>
+
+	* man/nsca-ng.cfg.in, src/server/conf.c: Support specifying defaults for
+	authorizations
+
+	Allow for specifying authorization settings outside of "authorize"
+	sections.  They will then serve as a fallback for "authorize" sections
+	that don't define these settings.
+
+	We don't use a libConfuse validation callback to implement this feature,
+	as it would then only work for default settings specified prior to the
+	corresponding "authorize" section(s).  This behaviour would be
+	especially problematic if multiple configuration files in a directory
+	tree are included recursively, as the order of inclusion is undefined.
+
+2013-08-05  Holger Weiss  <holger@weiss.in-berlin.de>
+
+	* man/nsca-ng.cfg.in: Improve wording
+
+	* src/server/auth.c: Remove code duplication
+
+	Use a single loop to match the configured "hosts", "services", and
+	"commands" patterns against submitted commands.  This change might also
+	speed up the code a tiny bit, as cfg_getopt() is now called only once
+	(by us) instead of twice (by libConfuse).
+
+	* src/server/conf.c: Add missing function prototype
+
+	Forward declare the host_to_command() function.
+
+2013-08-04  Holger Weiss  <holger@weiss.in-berlin.de>
+
+	* src/server/conf.c: Use validation callback for "authorize" sections
+
+	Move the check whether a password was specified from hash_auth_blocks()
+	into a validation callback function.
+
+	* src/server/conf.c: Minor cosmetic change
+
+	Sort cfg_set_validate_func() calls alphabetically.
+
+2013-08-02  Holger Weiss  <holger@weiss.in-berlin.de>
+
+	* configure.ac, m4/networking.m4: Move checks for network types to
+	m4/networking.m4
+
+	The checks for the availability of types related to networking belong
+	into m4/networking.m4, not into configure.ac.
+
+	* src/client/send_nsca.c: Be more strict when parsing escape sequences
+
+	Let send_nsca(8) die with an error message if "-d '\<x>'" or "-e '\<x>'"
+	is specified and "\<x>" is not a recognized escape sequence (instead of
+	silently using "<x>" in this case).
+
+	* configure.ac, src/common/tls.c: Check availability of "struct
+	sockaddr_storage"
+
+	Use "struct sockaddr_in6" or "struct sockaddr_in" on systems that don't
+	provide "struct sockaddr_storage".
+
+2013-08-01  Holger Weiss  <holger@weiss.in-berlin.de>
+
+	* man/send_nsca.in, src/client/send_nsca.c: Teach the client about
+	backslash escape sequences
+
+	Let send_nsca(8)'s "-d" and "-e" flags accept C-style escape sequences,
+	so that e.g. "-e '\n'" can be specified.  Octal numbers with a leading
+	zero and hexadecimal numbers prefixed with "0x" are also accepted.
+
+	* src/server/conf.c: Don't die in parse_include()
+
+	Let the callers of the parse_include() function check for errors.  This
+	is just a cosmetic change, the behaviour remains the same.
+
+2013-07-29  Holger Weiss  <holger@weiss.in-berlin.de>
+
+	* src/server/conf.c: Fix a (harmless) memory leak
+
+	When including files or directories, free(3) the memory allocated by
+	libConfuse's cfg_tilde_expand() function.
+
+	* src/server/conf.c: Don't confuse libConfuse when including trees
+
+	When including configuration files in a directory tree recursively, call
+
+		cfg_parse_buf(cfg, "include(<file>)")
+
+	for every included file instead of using the cfg_include() function
+	directly.  This is necessary to keep libConfuse's internal state
+	consistent.  The library would otherwise reject to include more than
+	MAX_INCLUDE_DEPTH (currently 10) files per directory tree, among other
+	issues.
+
+2013-07-28  Holger Weiss  <holger@weiss.in-berlin.de>
+
+	* man/nsca-ng.in, src/server/conf.c, src/server/nsca-ng.c: Let the
+	server accept "-c <directory>"
+
+	If a directory is specified via nsca-ng(8)'s "-c" flag, read the
+	configuration from all "*.cfg" and "*.conf" files in the specified
+	directory and all subdirectories.
+
+2013-07-19  Holger Weiss  <holger@weiss.in-berlin.de>
+
+	* TODO: Add another wish list item
+
+	The server should allow the user to specify one or more permitted
+	subnets.  Connections from clients outside these subnets should be
+	rejected.
+
+2013-07-18  Holger Weiss  <holger@weiss.in-berlin.de>
+
+	* etc/nsca-ng.cfg, man/nsca-ng.cfg.in, src/server/conf.c: Support
+	include(<directory>) in nsca-ng.cfg(5)
+
+	Let nsca-ng.cfg(5)'s "include" directive accept directory path names.
+	If a directory is specified, include all "*.cfg" and "*.conf" files in
+	this directory and all subdirectories.
+
+	* etc/nsca-ng.cfg: Cosmetic change
+
+	We usually use the file extension ".cfg" for configuration files.
+
+2013-07-17  Holger Weiss  <holger@weiss.in-berlin.de>
+
+	* configure.ac, src/server/nsca-ng.c, tests/test_nsca.c: Close open file
+	descriptors on server startup
+
+	Let nsca-ng(8) close any inherited file descriptors (except for stdin,
+	stdout, and stderr) on startup.
+
+2013-06-03  Holger Weiss  <holger@weiss.in-berlin.de>
+
+	* build-aux/generate-change-log: Convert ChangeLog from UTF-8 to
+	US-ASCII
+
+	Transliterate any non-ASCII characters when creating the ChangeLog file
+	from the Git history.
+
+2013-06-02  Holger Weiss  <holger@weiss.in-berlin.de>
+
+	* TODO: Add OpenSSL-related tasks
+
+	Also list wish list items that require OpenSSL to be patched (so that we
+	have a place to save any relevant URLs).
+
+2013-05-29  Holger Weiss  <holger@weiss.in-berlin.de>
+
+	* Makefile.am: Cosmetic change
+
+2013-05-22  Holger Weiss  <holger@weiss.in-berlin.de>
+
+	* m4/aio.m4: Prefix variable name with "nsca"
+
+2013-05-20  Holger Weiss  <holger@weiss.in-berlin.de>
+
+	* src/client/send_nsca.c, src/server/nsca-ng.c: Explicitly ignore
+	ev_run()'s return value
+
+	The ev_run() function returns a boolean value as of libev 4.15.
+
+	* lib/ev/ev.c, lib/ev/ev.h, lib/ev/ev_epoll.c, lib/ev/ev_kqueue.c,
+	lib/ev/ev_vars.h, lib/ev/ev_win32.c, lib/ev/ev_wrap.h: Update embedded
+	libev code to version 4.15
+
+	Update our copy of libev from version 4.11 to version 4.15.  The new
+	release provides a number of bug fixes and minor enhancements.
+
+2013-05-12  Holger Weiss  <holger@weiss.in-berlin.de>
+
+	* src/common/tls.c: Don't call OPENSSL_config(3)
+
+	The OPENSSL_config(3) man page claims that this function "ignores all
+	errors", but that's not true: at least OpenSSL 1.0.1e exit(3)s on
+	certain error conditions in the OPENSSL_config(3) function (e.g., if the
+	check whether the configuration file exists fails due to missing
+	permissions).  We therefore no longer call this function.
+
+2013-04-17  Holger Weiss  <holger@weiss.in-berlin.de>
+
+	* tests/input.at, tests/local.at: Minor test suite cleanups
+
+	Move all capturing of "input" files into tests/local.at:NSCA_CHECK().
+	Also, don't capture "expout" files.  If the actual output doesn't match
+	the expected output, the diff(1) is included anyway.
+
+	* tests/test_nsca.c: Apply another test suite fix for GNU Hurd
+
+	On GNU Hurd, opening the FIFO sometimes fails with EINTR (even though no
+	signal has been delivered).
+
+2013-04-16  Holger Weiss  <holger@weiss.in-berlin.de>
+
+	* src/server/fifo.c: Use fstat(2) to check if command file is a FIFO
+
+	Use fstat(2) rather than stat(2) to check whether the command file is a
+	named pipe.  This fixes a race condition in the case where the command
+	file is recreated after the NSCA-ng server has open(2)ed it.
+
+	* m4/aio.m4: Check whether AIO signals are delivered
+
+	At least on Debian GNU/kFreeBSD 7.0 RC1, the POSIX AIO implementation
+	fails to deliver completion notification signals (but seems to work
+	otherwise).  The ./configure script now detects this case and then
+	disables POSIX AIO usage.
+
+2013-04-15  Holger Weiss  <holger@weiss.in-berlin.de>
+
+	* tests/test_nsca.c: Fix test cases for GNU Hurd
+
+	GNU Hurd doesn't like the the trick we're using in tests/test_nsca.c to
+	avoid having to wait until the server notices that we opened the command
+	file for reading.  This means that each check might block for a few
+	seconds on Hurd, but that's still preferable to failing test cases.
+
+2013-04-14  Holger Weiss  <holger@weiss.in-berlin.de>
+
+	* configure.ac: Communicate PIPE_BUF default value to test suite
+
+	On platforms that don't define PIPE_BUF (such as GNU Hurd), we assume a
+	value of 512 in src/server/fifo.c (as POSIX guarantees PIPE_BUF >= 512).
+	We now communicate this default value to Autotest in order to fix the
+	corresponding test case on such platforms.
+
+2013-04-12  Holger Weiss  <holger@weiss.in-berlin.de>
 
 	* NEWS, configure.ac: NSCA-ng 1.1
 
@@ -11,7 +265,7 @@
 	The idea is to mention all available variables in the EXAMPLES section
 	of the nsca-ng.cfg(5) man page.
 
-2013-04-10  Holger Weiß  <holger@weiss.in-berlin.de>
+2013-04-10  Holger Weiss  <holger@weiss.in-berlin.de>
 
 	* contrib/invoke_check: Survive exit codes != 0
 
@@ -29,7 +283,7 @@
 	character may be specified to get compatibility with the original NSCA
 	releases prior to version 2.9.
 
-2013-04-09  Holger Weiß  <holger@weiss.in-berlin.de>
+2013-04-09  Holger Weiss  <holger@weiss.in-berlin.de>
 
 	* etc/nsca-ng.cfg, man/nsca-ng.cfg.in, src/server/auth.c,
 	src/server/conf.c, tests/auth.at: Support "hosts" patterns in
@@ -56,11 +310,11 @@
 	Test whether authorization patterns for (legitimate) service check
 	results work as expected.
 
-2013-03-23  Holger Weiß  <holger@weiss.in-berlin.de>
+2013-03-23  Holger Weiss  <holger@weiss.in-berlin.de>
 
 	* README: Fix typo
 
-2013-03-18  Holger Weiß  <holger@weiss.in-berlin.de>
+2013-03-18  Holger Weiss  <holger@weiss.in-berlin.de>
 
 	* src/client/client.c, src/common/util.c, src/common/util.h,
 	tests/input.at: Let send_nsca(8) ignore empty input lines
@@ -76,21 +330,21 @@
 	results into the client.  Therefore, send_nsca(8) now ignores empty
 	input lines.
 
-2013-03-17  Holger Weiß  <holger@weiss.in-berlin.de>
+2013-03-17  Holger Weiss  <holger@weiss.in-berlin.de>
 
 	* m4/openssl.m4: Link against libdl only if necessary
 
 	We should link against libdl whenever necessary, but not whenever
 	possible.
 
-2013-03-16  Holger Weiß  <holger@weiss.in-berlin.de>
+2013-03-16  Holger Weiss  <holger@weiss.in-berlin.de>
 
 	* configure.ac: Support --disable-maintainer-mode
 
 	Debian's dh_auto_configure(1) (which is used for building packages)
 	calls the ./configure script with the --disable-maintainer-mode flag.
 
-2013-03-14  Holger Weiß  <holger@weiss.in-berlin.de>
+2013-03-14  Holger Weiss  <holger@weiss.in-berlin.de>
 
 	* THANKS: Add a THANKS file
 
@@ -104,13 +358,13 @@
 	Allow the user to specify a directory the server should chroot(2) into
 	on startup.
 
-2013-03-12  Holger Weiß  <holger@weiss.in-berlin.de>
+2013-03-12  Holger Weiss  <holger@weiss.in-berlin.de>
 
 	* src/client/input.c: Cosmetic change: replace 0 with NULL
 
 	Compare pointers to NULL rather than 0 (for clarity).
 
-2013-03-11  Holger Weiß  <holger@weiss.in-berlin.de>
+2013-03-11  Holger Weiss  <holger@weiss.in-berlin.de>
 
 	* Makefile.am, build-aux/generate-change-log: s/python/perl/
 
@@ -120,19 +374,19 @@
 	not "python"; and reimplementing the thing in Perl seems simpler than
 	adding magic to update the Shebang line when Python is updated :-)
 
-2013-03-10  Holger Weiß  <holger@weiss.in-berlin.de>
+2013-03-10  Holger Weiss  <holger@weiss.in-berlin.de>
 
 	* README: Slightly improve wording
 
 	Improve the wording in the README file a bit.
 
-2013-03-08  Holger Weiß  <holger@weiss.in-berlin.de>
+2013-03-08  Holger Weiss  <holger@weiss.in-berlin.de>
 
 	* build-aux/man2ps: Remove outdated comment
 
 	The script no longer does what the comment said.
 
-2013-03-06  Holger Weiß  <holger@weiss.in-berlin.de>
+2013-03-06  Holger Weiss  <holger@weiss.in-berlin.de>
 
 	* NEWS, configure.ac: NSCA-ng 1.0
 
@@ -140,7 +394,7 @@
 
 	Remove a superfluous tab character.
 
-2013-03-04  Holger Weiß  <holger@weiss.in-berlin.de>
+2013-03-04  Holger Weiss  <holger@weiss.in-berlin.de>
 
 	* contrib/invoke_check: Fix our send_nsca(8) call
 
@@ -169,7 +423,7 @@
 
 	Slightly improve the wording of the description of the PUSH request.
 
-2013-03-03  Holger Weiß  <holger@weiss.in-berlin.de>
+2013-03-03  Holger Weiss  <holger@weiss.in-berlin.de>
 
 	* NEWS, PROTOCOL, README, TODO, contrib/README: Mark Markdown files as
 	such for Vim
@@ -195,13 +449,13 @@
 	server), so the client will spit out a "not authorized" message until
 	the user edits the nsca-ng.cfg(5) file.
 
-2013-03-02  Holger Weiß  <holger@weiss.in-berlin.de>
+2013-03-02  Holger Weiss  <holger@weiss.in-berlin.de>
 
 	* TODO: Add a wish list item
 
 	The client should support talking to multiple servers.
 
-2013-03-01  Holger Weiß  <holger@weiss.in-berlin.de>
+2013-03-01  Holger Weiss  <holger@weiss.in-berlin.de>
 
 	* src/server/fifo.c: Log a notice when (re)opening the command file
 
@@ -214,7 +468,7 @@
 	CRLF-terminated, and that embedded newline characters and backslashes
 	must be escaped.
 
-2013-02-27  Holger Weiß  <holger@weiss.in-berlin.de>
+2013-02-27  Holger Weiss  <holger@weiss.in-berlin.de>
 
 	* man/nsca-ng.cfg.in, man/send_nsca.cfg.in, src/client/conf.c,
 	src/server/conf.c: Use AES256-CBC instead of RC4 by default
@@ -231,7 +485,7 @@
 	Check whether the command file is a FIFO after opening it.  If it isn't,
 	close it again, log a warning message, and retry opening it later on.
 
-2013-02-26  Holger Weiß  <holger@weiss.in-berlin.de>
+2013-02-26  Holger Weiss  <holger@weiss.in-berlin.de>
 
 	* m4/aio.m4: Use AIOLIBS when testing POSIX AIO
 
@@ -246,7 +500,7 @@
 	talk to the server without allowing them to submit anything to the
 	command file.  This might be useful for monitoring the server.
 
-2013-02-25  Holger Weiß  <holger@weiss.in-berlin.de>
+2013-02-25  Holger Weiss  <holger@weiss.in-berlin.de>
 
 	* src/common/tls.c: Add missing "break" statement
 
@@ -260,7 +514,7 @@
 
 	Format commands and arguments as `code`.
 
-2013-02-23  Holger Weiß  <holger@weiss.in-berlin.de>
+2013-02-23  Holger Weiss  <holger@weiss.in-berlin.de>
 
 	* README, configure.ac: Suggest nsca-ng.org website and lists for
 	support
@@ -268,7 +522,7 @@
 	For support, suggest the nsca-ng.org mailing lists and website instead
 	of my personal email address.
 
-2013-02-22  Holger Weiß  <holger@weiss.in-berlin.de>
+2013-02-22  Holger Weiss  <holger@weiss.in-berlin.de>
 
 	* NEWS, PROTOCOL, README, TODO, contrib/README: Convert plain text
 	documentation to Markdown
@@ -281,7 +535,7 @@
 
 	The System V roff macros usually don't support "\(rs".
 
-2013-02-21  Holger Weiß  <holger@weiss.in-berlin.de>
+2013-02-21  Holger Weiss  <holger@weiss.in-berlin.de>
 
 	* contrib/invoke_check: Cosmetic change
 
@@ -295,7 +549,7 @@
 
 	The trailing ":" was missing in some of our Vim modelines.
 
-2013-02-20  Holger Weiß  <holger@weiss.in-berlin.de>
+2013-02-20  Holger Weiss  <holger@weiss.in-berlin.de>
 
 	* src/client/client.c, src/common/tls.c, src/common/tls.h,
 	src/server/server.c: Add session ID to connection-related log messages
@@ -303,7 +557,7 @@
 	Mention the session ID in all log messages related to the TLS
 	communication in order to ease debugging.
 
-2013-02-19  Holger Weiß  <holger@weiss.in-berlin.de>
+2013-02-19  Holger Weiss  <holger@weiss.in-berlin.de>
 
 	* src/server/nsca-ng.c: Fix nsca-ng(8)'s "-s" and "-S" flags
 
@@ -340,7 +594,7 @@
 
 	The "-s" option was effectively ignored by send_nsca(8).
 
-2013-02-18  Holger Weiß  <holger@weiss.in-berlin.de>
+2013-02-18  Holger Weiss  <holger@weiss.in-berlin.de>
 
 	* src/server/fifo.c: Use "async" prefix for all AIO-related functions
 
@@ -351,13 +605,13 @@
 	Make it clear that the point of using ev_invoke() is to invoke the
 	callback immediately.
 
-2013-02-17  Holger Weiß  <holger@weiss.in-berlin.de>
+2013-02-17  Holger Weiss  <holger@weiss.in-berlin.de>
 
 	* README: Add compatibility note
 
 	Add a note for NSCA 2.x users to the README file.
 
-2013-02-13  Holger Weiß  <holger@weiss.in-berlin.de>
+2013-02-13  Holger Weiss  <holger@weiss.in-berlin.de>
 
 	* build-aux/man2ps: Use GNU groff extensions
 
@@ -373,7 +627,7 @@
 	Add comments mentioning the default settings to the sample client
 	configuration file.
 
-2013-02-12  Holger Weiß  <holger@weiss.in-berlin.de>
+2013-02-12  Holger Weiss  <holger@weiss.in-berlin.de>
 
 	* .gitignore: Let Git ignore /man/*.ps files
 
@@ -393,7 +647,7 @@
 	The POSIX AIO API and FreeBSD's pidfile(3) functions are used only by
 	the server, so don't link the client against those libraries.
 
-2013-02-11  Holger Weiß  <holger@weiss.in-berlin.de>
+2013-02-11  Holger Weiss  <holger@weiss.in-berlin.de>
 
 	* build-aux/clang-analyze: Add some include paths
 
@@ -424,7 +678,7 @@
 
 	A '\0' should be assigned to nul-terminate a string.
 
-2013-02-10  Holger Weiß  <holger@weiss.in-berlin.de>
+2013-02-10  Holger Weiss  <holger@weiss.in-berlin.de>
 
 	* src/common/Makefile.am, src/common/util.c: Use git-describe(1) output
 	in version string
@@ -456,7 +710,7 @@
 	While at it, adjust a comment in the sample configuration file
 	accordingly, and add a test case for this issue.
 
-2013-02-09  Holger Weiß  <holger@weiss.in-berlin.de>
+2013-02-09  Holger Weiss  <holger@weiss.in-berlin.de>
 
 	* src/server/server.c: Mention the session ID when refusing data
 
@@ -468,7 +722,7 @@
 	Nagios accepts a non-numeric check result status (such as "OK"), so we
 	should accept that, too (when matching against service patterns).
 
-2013-02-08  Holger Weiß  <holger@weiss.in-berlin.de>
+2013-02-08  Holger Weiss  <holger@weiss.in-berlin.de>
 
 	* README, contrib/README, contrib/debug_server, etc/Makefile.am,
 	etc/nsca-ng.cfg, etc/send_nsca.cfg, man/Makefile.am, man/nsca-ng.cfg.in,
