@@ -1,3 +1,18 @@
+nsca-ng (1.4-1) unstable; urgency=medium
+
+  * [681226d] Fix postinst
+  * [8e6a5cf] Imported Upstream version 1.4
+              - Fix pidfile(3) API detection
+                (Closes: #750401)
+  * [e36f694] Refresh patch
+  * [af0c838] Add systemd support
+  * [5d6f4c1] deprecate default file
+  * [a29a1bd] Bump standards version
+  * [1af9aea] Make linitian happy
+  * [72a1b75] Add some notes about socket activation in config
+
+ -- Alexander Wirt <formorer@debian.org>  Fri, 17 Oct 2014 15:49:54 +0200
+
 nsca-ng (1.2-1) unstable; urgency=low
 
   * [594ee2f] Imported Upstream version 1.2
