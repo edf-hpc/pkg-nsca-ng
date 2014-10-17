@@ -35,11 +35,6 @@ CFGFILE="/etc/nsca-ng/nsca-ng.cfg"
 # Load the VERBOSE setting and other rcS variables
 . /lib/init/vars.sh
 
-if [ "${NSCA_NG}" != "yes"  ]; then
-	log_warning_msg "Not starting nsca-ng - edit /etc/default/nsca-ng-server to enable it"
-	exit 0
-fi
-
 if [ -r "$CFGFILE" ]
 then
 	: ${DAEMONUSER:="$(sed -r -n "s/^[[:blank:]]*user[[:blank:]]*=[[:blank:]]*[\"']?([^\"'#[:blank:]]+).*/\1/p" "$CFGFILE")"}
