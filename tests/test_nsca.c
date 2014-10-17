@@ -99,7 +99,9 @@ int
 main(int argc, char **argv)
 {
 	struct sigaction sa;
+#ifndef __gnu_hurd__
 	int fd;
+#endif
 
 	get_options(argc, argv);
 
@@ -119,15 +121,24 @@ main(int argc, char **argv)
 	create_fifo();
 	xatexit(remove_fifo);
 
-	/* Make sure there's a FIFO reader when the server starts up. */
-	fd = open(COMMAND_FILE, O_RDONLY | O_NONBLOCK);
+	/*
+	 * Make sure there's a FIFO reader when the server starts up, in order
+	 * to avoid having to wait ten seconds until the server notices that we
+	 * opened the FIFO for reading (in the cat_fifo() function).  GNU Hurd
+	 * doesn't like this trick, though.
+	 */
+#ifndef __gnu_hurd__
+	if ((fd = open(COMMAND_FILE, O_RDONLY | O_NONBLOCK)) == -1)
+		die("Cannot open %s: %s", COMMAND_FILE, strerror(errno));
+#endif
 	run_command(join(SERVER_COMMAND_LINE, getenv("NSCA_SERVER_FLAGS")));
 	xatexit(kill_server);
-	(void)close(fd);
 
 	run_command(join(CLIENT_COMMAND_LINE, getenv("NSCA_CLIENT_FLAGS")));
 	cat_fifo(expected_num_lines);
-
+#ifndef __gnu_hurd__
+	(void)close(fd);
+#endif
 	return EXIT_SUCCESS;
 }
 
@@ -237,7 +248,10 @@ cat_fifo(long n_lines)
 		STATE_PRINT_COMMAND
 	} state = STATE_EAT_TIMESTAMP;
 
-	if ((fifo = fopen(COMMAND_FILE, "r")) == NULL)
+	do
+		fifo = fopen(COMMAND_FILE, "r");
+	while (fifo == NULL && errno == EINTR); /* Happens on GNU Hurd. */
+	if (fifo == NULL)
 		die("Cannot open %s: %s", COMMAND_FILE, strerror(errno));
 	while ((c = getc(fifo)) != EOF) {
 		if (state == STATE_EAT_TIMESTAMP) {
@@ -282,10 +296,13 @@ kill_server(void)
 	 * following test(s), we KILL the process instead of using the TERM
 	 * signal.
 	 */
-	if ((f = fopen(SERVER_PID_FILE, "r")) == NULL)
+	if ((f = fopen(SERVER_PID_FILE, "r")) == NULL) {
 		(void)fprintf(stderr, "%s: Cannot open %s: %s\n", PROGRAM_NAME,
 		    SERVER_PID_FILE, strerror(errno));
-	else if (fgets(buf, sizeof(buf), f) == NULL)
+		return;
+	}
+
+	if (fgets(buf, sizeof(buf), f) == NULL)
 		(void)fprintf(stderr, "%s: Cannot read %s: %s\n", PROGRAM_NAME,
 		    SERVER_PID_FILE, ferror(f) ? strerror(errno) : "EOF");
 	else if ((pid = (pid_t)atol(buf)) < 1)
@@ -294,7 +311,8 @@ kill_server(void)
 	else if (kill(pid, SIGKILL) == -1)
 		(void)fprintf(stderr, "%s: Cannot kill server PID %lu: %s\n",
 		    PROGRAM_NAME, (unsigned long)pid, strerror(errno));
-	else if (fclose(f) == EOF)
+
+	if (fclose(f) == EOF)
 		(void)fprintf(stderr, "%s: Cannot close %s: %s\n", PROGRAM_NAME,
 		    SERVER_PID_FILE, strerror(errno));
 }

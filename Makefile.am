@@ -26,16 +26,13 @@
 ## POSSIBILITY OF SUCH DAMAGE.
 
 ACLOCAL_AMFLAGS = -I m4
+EXTRA_DIST = ChangeLog PROTOCOL autogen.sh
 
-SUBDIRS = lib src man etc build-aux contrib tests
+SUBDIRS = lib src man etc build-aux contrib python tests
 
 #
 # The ChangeLog file is auto-generated from the Git history.  We let it depend
-# on configure.ac, as we bump our version number in that file.  We ignore any
-# errors so that this rule doesn't add a dependency on Python.
+# on configure.ac, as we bump our version number in that file.
 #
-
-EXTRA_DIST = ChangeLog PROTOCOL autogen.sh
-
 ChangeLog: configure.ac
-	-$(AM_V_GEN)$(top_srcdir)/build-aux/generate-change-log > $@
+	$(AM_V_GEN)$(top_srcdir)/build-aux/generate-change-log > $@

@@ -598,13 +598,18 @@ at_help_all="1;basic.at:27;Host check result;;
 6;basic.at:52;Monitoring command, no timestamp;;
 7;input.at:27;Multiline check result;;
 8;input.at:32;Multiple check results;;
-9;input.at:46;Multiple monitoring commands;;
-10;input.at:56;Incorrect input format;;
-11;input.at:62;Data size exceeds max_command_size;;
-12;input.at:73;Data size exceeds PIPE_BUF;;
-13;auth.at:27;Incorrect password;;
-14;auth.at:34;Unauthorized submission;;
-15;auth.at:40;Malicious service check result;;
+9;input.at:44;Multiple results, colon-separated;;
+10;input.at:56;Multiple monitoring commands;;
+11;input.at:66;Result with trailing ETB and newline;;
+12;input.at:72;Incorrect input format;;
+13;input.at:78;Data size exceeds max_command_size;;
+14;input.at:88;Data size exceeds PIPE_BUF;;
+15;auth.at:27;Incorrect password;;
+16;auth.at:34;Unauthorized submission;;
+17;auth.at:40;Legitimate host check result;;
+18;auth.at:46;Legitimate service check result;;
+19;auth.at:52;Malicious host check result;;
+20;auth.at:58;Malicious service check result;;
 "
 # List of the all the test groups.
 at_groups_all=`$as_echo "$at_help_all" | sed 's/;.*//'`
@@ -618,7 +623,7 @@ at_fn_validate_ranges ()
   for at_grp
   do
     eval at_value=\$$at_grp
-    if test $at_value -lt 1 || test $at_value -gt 15; then
+    if test $at_value -lt 1 || test $at_value -gt 20; then
       $as_echo "invalid test group: $at_value" >&2
       exit 1
     fi
@@ -917,7 +922,7 @@ fi
 # List of tests.
 if $at_list_p; then
   cat <<_ATEOF || at_write_fail=1
-NSCA-ng 1.0 test suite test groups:
+NSCA-ng 1.4 test suite test groups:
 
  NUM: FILE-NAME:LINE     TEST-GROUP-NAME
       KEYWORDS
@@ -958,7 +963,7 @@ _ATEOF
   exit $at_write_fail
 fi
 if $at_version_p; then
-  $as_echo "$as_me (NSCA-ng 1.0)" &&
+  $as_echo "$as_me (NSCA-ng 1.4)" &&
   cat <<\_ATEOF || at_write_fail=1
 
 Copyright (C) 2012 Free Software Foundation, Inc.
@@ -982,7 +987,7 @@ at_banner_text_1="Basic functionality."
 # Category starts at test group 7.
 at_banner_text_2="Unusual input."
 # Banner 3. auth.at:25
-# Category starts at test group 13.
+# Category starts at test group 15.
 at_banner_text_3="Authentication and authorization."
 
 # Take any -C into account.
@@ -1144,11 +1149,11 @@ exec 5>>"$at_suite_log"
 
 # Banners and logs.
 $as_echo "## ----------------------- ##
-## NSCA-ng 1.0 test suite. ##
+## NSCA-ng 1.4 test suite. ##
 ## ----------------------- ##"
 {
   $as_echo "## ----------------------- ##
-## NSCA-ng 1.0 test suite. ##
+## NSCA-ng 1.4 test suite. ##
 ## ----------------------- ##"
   echo
 
@@ -1992,7 +1997,7 @@ _ASBOX
   $as_echo "Please send $at_msg and all information you think might help:
 
    To: <developers@nsca-ng.org>
-   Subject: [NSCA-ng 1.0] $as_me: $at_fail_list${at_fail_list:+ failed${at_xpass_list:+, }}$at_xpass_list${at_xpass_list:+ passed unexpectedly}
+   Subject: [NSCA-ng 1.4] $as_me: $at_fail_list${at_fail_list:+ failed${at_xpass_list:+, }}$at_xpass_list${at_xpass_list:+ passed unexpectedly}
 
 You may investigate any problem if you feel able to do so, in which
 case the test suite provides a good starting point.  Its output may
@@ -2022,7 +2027,7 @@ at_xfail=no
 
 
 
-     cat >input <<'_ATEOF'
+  cat >input <<'_ATEOF'
 jupiter	0	jupiter is alive
 _ATEOF
 
@@ -2070,7 +2075,7 @@ at_xfail=no
 
 
 
-     cat >input <<'_ATEOF'
+  cat >input <<'_ATEOF'
 jupiter/0/jupiter is alive
 _ATEOF
 
@@ -2118,7 +2123,7 @@ at_xfail=no
 
 
 
-     cat >input <<'_ATEOF'
+  cat >input <<'_ATEOF'
 saturn	http	0	HTTP is happy
 _ATEOF
 
@@ -2166,7 +2171,7 @@ at_xfail=no
 
 
 
-     cat >input <<'_ATEOF'
+  cat >input <<'_ATEOF'
 saturn/http/0/HTTP is happy
 _ATEOF
 
@@ -2214,7 +2219,7 @@ at_xfail=no
 
 
 
-     cat >input <<'_ATEOF'
+  cat >input <<'_ATEOF'
 [1360095440] ADD_HOST_COMMENT;jupiter;1;John Doe;Useless comment
 _ATEOF
 
@@ -2262,7 +2267,7 @@ at_xfail=no
 
 
 
-     cat >input <<'_ATEOF'
+  cat >input <<'_ATEOF'
 ADD_HOST_COMMENT;jupiter;1;John Doe;Useless comment
 _ATEOF
 
@@ -2309,8 +2314,9 @@ at_xfail=no
 
 
 
+    is alive equals the literal string "input".
 
-     cat >input <<'_ATEOF'
+  cat >input <<'_ATEOF'
 jupiter	0	jupiter
   is alive
 _ATEOF
@@ -2351,16 +2357,12 @@ at_xfail=no
   $as_echo "8. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
-
 printf 'jupiter\t0\tresult 1\n' >input
 printf '\27' >>input
 printf 'jupiter\t0\tresult 2\n' >>input
 printf '\27' >>input
 printf 'jupiter\t0\tresult 3\n' >>input
 
-printf 'PROCESS_HOST_CHECK_RESULT;jupiter;0;result 1\n' >expout
-printf 'PROCESS_HOST_CHECK_RESULT;jupiter;0;result 2\n' >>expout
-printf 'PROCESS_HOST_CHECK_RESULT;jupiter;0;result 3\n' >>expout
 
 
 
@@ -2376,18 +2378,21 @@ printf 'PROCESS_HOST_CHECK_RESULT;jupiter;0;result 3\n' >>expout
 
 
     { set +x
-$as_echo "$at_srcdir/input.at:43: <input test_nsca -l 3"
-at_fn_check_prepare_trace "input.at:43"
+$as_echo "$at_srcdir/input.at:38: <input test_nsca -l 3"
+at_fn_check_prepare_trace "input.at:38"
 ( $at_check_trace; <input test_nsca -l 3
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
-$at_diff expout "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/input.at:43"
+echo >>"$at_stdout"; $as_echo "PROCESS_HOST_CHECK_RESULT;jupiter;0;result 1
+PROCESS_HOST_CHECK_RESULT;jupiter;0;result 2
+PROCESS_HOST_CHECK_RESULT;jupiter;0;result 3
+" | \
+  $at_diff - "$at_stdout" || at_failed=:
+at_fn_check_status 0 $at_status "$at_srcdir/input.at:38"
 $at_failed && at_fn_log_failure  \
-"input" \
-"expout"
+"input"
 $at_traceon; }
 
 
@@ -2397,18 +2402,70 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_8
 #AT_START_9
-at_fn_group_banner 9 'input.at:46' \
-  "Multiple monitoring commands" "                   " 2
+at_fn_group_banner 9 'input.at:44' \
+  "Multiple results, colon-separated" "              " 2
 at_xfail=no
 (
   $as_echo "9. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
+printf 'jupiter\t0\tresult 1\n' >input
+printf ':' >>input
+printf 'jupiter\t0\tresult 2\n' >>input
+printf ':' >>input
+printf 'jupiter\t0\tresult 3\n' >>input
 
-printf 'PROCESS_HOST_CHECK_RESULT;saturn;0;result 1\n' >input
-printf 'PROCESS_HOST_CHECK_RESULT;saturn;0;result 2\n' >>input
-printf 'PROCESS_HOST_CHECK_RESULT;saturn;0;result 3\n' >>input
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+    { set +x
+$as_echo "$at_srcdir/input.at:50: <input NSCA_CLIENT_FLAGS=\"-e :\" test_nsca -l 3"
+at_fn_check_prepare_trace "input.at:50"
+( $at_check_trace; <input NSCA_CLIENT_FLAGS="-e :" test_nsca -l 3
+) >>"$at_stdout" 2>>"$at_stderr" 5>&-
+at_status=$? at_failed=false
+$at_check_filter
+at_fn_diff_devnull "$at_stderr" || at_failed=:
+echo >>"$at_stdout"; $as_echo "PROCESS_HOST_CHECK_RESULT;jupiter;0;result 1
+PROCESS_HOST_CHECK_RESULT;jupiter;0;result 2
+PROCESS_HOST_CHECK_RESULT;jupiter;0;result 3
+" | \
+  $at_diff - "$at_stdout" || at_failed=:
+at_fn_check_status 0 $at_status "$at_srcdir/input.at:50"
+$at_failed && at_fn_log_failure  \
+"input"
+$at_traceon; }
+
+
+  set +x
+  $at_times_p && times >"$at_times_file"
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
+read at_status <"$at_status_file"
+#AT_STOP_9
+#AT_START_10
+at_fn_group_banner 10 'input.at:56' \
+  "Multiple monitoring commands" "                   " 2
+at_xfail=no
+(
+  $as_echo "10. $at_setup_line: testing $at_desc ..."
+  $at_traceon
+
+cat >input <<'NSCA_EOF'
+PROCESS_HOST_CHECK_RESULT;saturn;0;result 1
+PROCESS_HOST_CHECK_RESULT;saturn;0;result 2
+PROCESS_HOST_CHECK_RESULT;saturn;0;result 3
+NSCA_EOF
 ln input expout
 
 
@@ -2424,65 +2481,17 @@ ln input expout
 
 
 
+
     { set +x
-$as_echo "$at_srcdir/input.at:53: <input NSCA_CLIENT_FLAGS=\"-C\" test_nsca -l 3"
-at_fn_check_prepare_trace "input.at:53"
+$as_echo "$at_srcdir/input.at:63: <input NSCA_CLIENT_FLAGS=\"-C\" test_nsca -l 3"
+at_fn_check_prepare_trace "input.at:63"
 ( $at_check_trace; <input NSCA_CLIENT_FLAGS="-C" test_nsca -l 3
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
 $at_diff expout "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/input.at:53"
-$at_failed && at_fn_log_failure  \
-"input" \
-"expout"
-$at_traceon; }
-
-
-  set +x
-  $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 7>&- | eval $at_tee_pipe
-read at_status <"$at_status_file"
-#AT_STOP_9
-#AT_START_10
-at_fn_group_banner 10 'input.at:56' \
-  "Incorrect input format" "                         " 2
-at_xfail=no
-(
-  $as_echo "10. $at_setup_line: testing $at_desc ..."
-  $at_traceon
-
-
-
-
-
-
-
-
-
-     cat >input <<'_ATEOF'
-garbage
-_ATEOF
-
-
-
-
-
-
-
-    { set +x
-$as_echo "$at_srcdir/input.at:57: <input test_nsca"
-at_fn_check_prepare_trace "input.at:57"
-( $at_check_trace; <input test_nsca
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-echo >>"$at_stderr"; $as_echo "send_nsca: [FATAL] Input format incorrect, see the send_nsca(8) man page
-" | \
-  $at_diff - "$at_stderr" || at_failed=:
-at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 1 $at_status "$at_srcdir/input.at:57"
+at_fn_check_status 0 $at_status "$at_srcdir/input.at:63"
 $at_failed && at_fn_log_failure  \
 "input"
 $at_traceon; }
@@ -2494,11 +2503,58 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_10
 #AT_START_11
-at_fn_group_banner 11 'input.at:62' \
-  "Data size exceeds max_command_size" "             " 2
+at_fn_group_banner 11 'input.at:66' \
+  "Result with trailing ETB and newline" "           " 2
 at_xfail=no
 (
   $as_echo "11. $at_setup_line: testing $at_desc ..."
+  $at_traceon
+
+printf 'jupiter\t0\tjupiter is alive\n' >input
+printf '\27\n' >>input
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    { set +x
+$as_echo "$at_srcdir/input.at:69: <input test_nsca"
+at_fn_check_prepare_trace "input.at:69"
+( $at_check_trace; <input test_nsca
+) >>"$at_stdout" 2>>"$at_stderr" 5>&-
+at_status=$? at_failed=false
+$at_check_filter
+at_fn_diff_devnull "$at_stderr" || at_failed=:
+echo >>"$at_stdout"; $as_echo "PROCESS_HOST_CHECK_RESULT;jupiter;0;jupiter is alive
+" | \
+  $at_diff - "$at_stdout" || at_failed=:
+at_fn_check_status 0 $at_status "$at_srcdir/input.at:69"
+$at_failed && at_fn_log_failure  \
+"input"
+$at_traceon; }
+
+
+  set +x
+  $at_times_p && times >"$at_times_file"
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
+read at_status <"$at_status_file"
+#AT_STOP_11
+#AT_START_12
+at_fn_group_banner 12 'input.at:72' \
+  "Incorrect input format" "                         " 2
+at_xfail=no
+(
+  $as_echo "12. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 
@@ -2509,7 +2565,55 @@ at_xfail=no
 
 
 
-     cat >input <<'_ATEOF'
+  cat >input <<'_ATEOF'
+garbage
+_ATEOF
+
+
+
+
+
+
+
+    { set +x
+$as_echo "$at_srcdir/input.at:73: <input test_nsca"
+at_fn_check_prepare_trace "input.at:73"
+( $at_check_trace; <input test_nsca
+) >>"$at_stdout" 2>>"$at_stderr" 5>&-
+at_status=$? at_failed=false
+$at_check_filter
+echo >>"$at_stderr"; $as_echo "send_nsca: [FATAL] Input format incorrect, see the send_nsca(8) man page
+" | \
+  $at_diff - "$at_stderr" || at_failed=:
+at_fn_diff_devnull "$at_stdout" || at_failed=:
+at_fn_check_status 1 $at_status "$at_srcdir/input.at:73"
+$at_failed && at_fn_log_failure  \
+"input"
+$at_traceon; }
+
+
+  set +x
+  $at_times_p && times >"$at_times_file"
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
+read at_status <"$at_status_file"
+#AT_STOP_12
+#AT_START_13
+at_fn_group_banner 13 'input.at:78' \
+  "Data size exceeds max_command_size" "             " 2
+at_xfail=no
+(
+  $as_echo "13. $at_setup_line: testing $at_desc ..."
+  $at_traceon
+
+
+
+
+
+
+
+
+
+  cat >input <<'_ATEOF'
 jupiter	0	jupiter is alive
 _ATEOF
 
@@ -2528,8 +2632,8 @@ _ATEOF
 
 
     { set +x
-$as_echo "$at_srcdir/input.at:63: <input test_nsca"
-at_fn_check_prepare_trace "input.at:63"
+$as_echo "$at_srcdir/input.at:79: <input test_nsca"
+at_fn_check_prepare_trace "input.at:79"
 ( $at_check_trace; <input test_nsca
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
@@ -2538,7 +2642,7 @@ echo >>"$at_stderr"; $as_echo "send_nsca: [FATAL] Server said: FAIL PUSH data si
 " | \
   $at_diff - "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 1 $at_status "$at_srcdir/input.at:63"
+at_fn_check_status 1 $at_status "$at_srcdir/input.at:79"
 $at_failed && at_fn_log_failure  \
 "input" \
 "server.cfg"
@@ -2549,22 +2653,21 @@ $at_traceon; }
   $at_times_p && times >"$at_times_file"
 ) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
-#AT_STOP_11
-#AT_START_12
-at_fn_group_banner 12 'input.at:73' \
+#AT_STOP_13
+#AT_START_14
+at_fn_group_banner 14 'input.at:88' \
   "Data size exceeds PIPE_BUF" "                     " 2
 at_xfail=no
 (
-  $as_echo "12. $at_setup_line: testing $at_desc ..."
+  $as_echo "14. $at_setup_line: testing $at_desc ..."
   $at_traceon
-
 
 cat >input <<NSCA_EOF
 `printf "jupiter	0	%0${nsca_pipe_buf}d" 1`
 NSCA_EOF
 
 cat >server.cfg <<NSCA_EOF
-temp_directory=`pwd`
+temp_directory = "`pwd`"
 max_command_size = 0
 authorize "*" {
   password = "forty-two"
@@ -2585,48 +2688,49 @@ NSCA_EOF
 
 
 
+
     { set +x
-$as_echo "$at_srcdir/input.at:87: <input test_nsca"
-at_fn_check_prepare_trace "input.at:87"
+$as_echo "$at_srcdir/input.at:101: <input test_nsca"
+at_fn_check_prepare_trace "input.at:101"
 ( $at_check_trace; <input test_nsca
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
 echo stdout:; tee stdout <"$at_stdout"
-at_fn_check_status 0 $at_status "$at_srcdir/input.at:87"
+at_fn_check_status 0 $at_status "$at_srcdir/input.at:101"
 $at_failed && at_fn_log_failure  \
-"input" \
-"server.cfg"
+"server.cfg" \
+"input"
 $at_traceon; }
 
 
 { set +x
-$as_echo "$at_srcdir/input.at:88: grep \"^PROCESS_FILE;\`pwd\`/nsca\\..\\{6\\};1\$\" stdout"
-at_fn_check_prepare_notrace 'a `...` command substitution' "input.at:88"
+$as_echo "$at_srcdir/input.at:102: grep \"^PROCESS_FILE;\`pwd\`/nsca\\..\\{6\\};1\$\" stdout"
+at_fn_check_prepare_notrace 'a `...` command substitution' "input.at:102"
 ( $at_check_trace; grep "^PROCESS_FILE;`pwd`/nsca\..\{6\};1$" stdout
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
 echo stdout:; cat "$at_stdout"
-at_fn_check_status 0 $at_status "$at_srcdir/input.at:88"
+at_fn_check_status 0 $at_status "$at_srcdir/input.at:102"
 $at_failed && at_fn_log_failure  \
-"input" \
-"server.cfg"
+"server.cfg" \
+"input"
 $at_traceon; }
 
   set +x
   $at_times_p && times >"$at_times_file"
 ) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
-#AT_STOP_12
-#AT_START_13
-at_fn_group_banner 13 'auth.at:27' \
+#AT_STOP_14
+#AT_START_15
+at_fn_group_banner 15 'auth.at:27' \
   "Incorrect password" "                             " 3
 at_xfail=no
 (
-  $as_echo "13. $at_setup_line: testing $at_desc ..."
+  $as_echo "15. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 
@@ -2637,7 +2741,7 @@ at_xfail=no
 
 
 
-     cat >input <<'_ATEOF'
+  cat >input <<'_ATEOF'
 jupiter	0	jupiter is alive
 _ATEOF
 
@@ -2686,13 +2790,13 @@ $at_traceon; }
   $at_times_p && times >"$at_times_file"
 ) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
-#AT_STOP_13
-#AT_START_14
-at_fn_group_banner 14 'auth.at:34' \
+#AT_STOP_15
+#AT_START_16
+at_fn_group_banner 16 'auth.at:34' \
   "Unauthorized submission" "                        " 3
 at_xfail=no
 (
-  $as_echo "14. $at_setup_line: testing $at_desc ..."
+  $as_echo "16. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 
@@ -2703,7 +2807,7 @@ at_xfail=no
 
 
 
-     cat >input <<'_ATEOF'
+  cat >input <<'_ATEOF'
 jupiter	0	jupiter is alive
 _ATEOF
 
@@ -2739,13 +2843,13 @@ $at_traceon; }
   $at_times_p && times >"$at_times_file"
 ) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
-#AT_STOP_14
-#AT_START_15
-at_fn_group_banner 15 'auth.at:40' \
-  "Malicious service check result" "                 " 3
+#AT_STOP_16
+#AT_START_17
+at_fn_group_banner 17 'auth.at:40' \
+  "Legitimate host check result" "                   " 3
 at_xfail=no
 (
-  $as_echo "15. $at_setup_line: testing $at_desc ..."
+  $as_echo "17. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 
@@ -2756,7 +2860,166 @@ at_xfail=no
 
 
 
-     cat >input <<'_ATEOF'
+  cat >input <<'_ATEOF'
+jupiter	0	jupiter is alive
+_ATEOF
+
+
+
+
+     cat >server.cfg <<'_ATEOF'
+authorize "*" { password = "forty-two" hosts = "jupiter" }
+_ATEOF
+
+
+
+
+    { set +x
+$as_echo "$at_srcdir/auth.at:41: <input test_nsca"
+at_fn_check_prepare_trace "auth.at:41"
+( $at_check_trace; <input test_nsca
+) >>"$at_stdout" 2>>"$at_stderr" 5>&-
+at_status=$? at_failed=false
+$at_check_filter
+at_fn_diff_devnull "$at_stderr" || at_failed=:
+echo >>"$at_stdout"; $as_echo "PROCESS_HOST_CHECK_RESULT;jupiter;0;jupiter is alive
+" | \
+  $at_diff - "$at_stdout" || at_failed=:
+at_fn_check_status 0 $at_status "$at_srcdir/auth.at:41"
+$at_failed && at_fn_log_failure  \
+"input" \
+"server.cfg"
+$at_traceon; }
+
+
+  set +x
+  $at_times_p && times >"$at_times_file"
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
+read at_status <"$at_status_file"
+#AT_STOP_17
+#AT_START_18
+at_fn_group_banner 18 'auth.at:46' \
+  "Legitimate service check result" "                " 3
+at_xfail=no
+(
+  $as_echo "18. $at_setup_line: testing $at_desc ..."
+  $at_traceon
+
+
+
+
+
+
+
+
+
+  cat >input <<'_ATEOF'
+jupiter	disk	0	disk is fine
+_ATEOF
+
+
+
+
+     cat >server.cfg <<'_ATEOF'
+authorize "*" { password = "forty-two" services = "disk" }
+_ATEOF
+
+
+
+
+    { set +x
+$as_echo "$at_srcdir/auth.at:47: <input test_nsca"
+at_fn_check_prepare_trace "auth.at:47"
+( $at_check_trace; <input test_nsca
+) >>"$at_stdout" 2>>"$at_stderr" 5>&-
+at_status=$? at_failed=false
+$at_check_filter
+at_fn_diff_devnull "$at_stderr" || at_failed=:
+echo >>"$at_stdout"; $as_echo "PROCESS_SERVICE_CHECK_RESULT;jupiter;disk;0;disk is fine
+" | \
+  $at_diff - "$at_stdout" || at_failed=:
+at_fn_check_status 0 $at_status "$at_srcdir/auth.at:47"
+$at_failed && at_fn_log_failure  \
+"input" \
+"server.cfg"
+$at_traceon; }
+
+
+  set +x
+  $at_times_p && times >"$at_times_file"
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
+read at_status <"$at_status_file"
+#AT_STOP_18
+#AT_START_19
+at_fn_group_banner 19 'auth.at:52' \
+  "Malicious host check result" "                    " 3
+at_xfail=no
+(
+  $as_echo "19. $at_setup_line: testing $at_desc ..."
+  $at_traceon
+
+
+
+
+
+
+
+
+
+  cat >input <<'_ATEOF'
+saturn	0	jupiter;0;tricked you!
+_ATEOF
+
+
+
+
+     cat >server.cfg <<'_ATEOF'
+authorize "*" { password = "forty-two" hosts = "jupiter" }
+_ATEOF
+
+
+
+
+    { set +x
+$as_echo "$at_srcdir/auth.at:53: <input test_nsca"
+at_fn_check_prepare_trace "auth.at:53"
+( $at_check_trace; <input test_nsca
+) >>"$at_stdout" 2>>"$at_stderr" 5>&-
+at_status=$? at_failed=false
+$at_check_filter
+echo >>"$at_stderr"; $as_echo "send_nsca: [FATAL] Server said: FAIL You're not authorized
+" | \
+  $at_diff - "$at_stderr" || at_failed=:
+at_fn_diff_devnull "$at_stdout" || at_failed=:
+at_fn_check_status 1 $at_status "$at_srcdir/auth.at:53"
+$at_failed && at_fn_log_failure  \
+"input" \
+"server.cfg"
+$at_traceon; }
+
+
+  set +x
+  $at_times_p && times >"$at_times_file"
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
+read at_status <"$at_status_file"
+#AT_STOP_19
+#AT_START_20
+at_fn_group_banner 20 'auth.at:58' \
+  "Malicious service check result" "                 " 3
+at_xfail=no
+(
+  $as_echo "20. $at_setup_line: testing $at_desc ..."
+  $at_traceon
+
+
+
+
+
+
+
+
+
+  cat >input <<'_ATEOF'
 jupiter	http	0	disk;0;tricked you!
 _ATEOF
 
@@ -2771,8 +3034,8 @@ _ATEOF
 
 
     { set +x
-$as_echo "$at_srcdir/auth.at:41: <input test_nsca"
-at_fn_check_prepare_trace "auth.at:41"
+$as_echo "$at_srcdir/auth.at:59: <input test_nsca"
+at_fn_check_prepare_trace "auth.at:59"
 ( $at_check_trace; <input test_nsca
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
@@ -2781,7 +3044,7 @@ echo >>"$at_stderr"; $as_echo "send_nsca: [FATAL] Server said: FAIL You're not a
 " | \
   $at_diff - "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 1 $at_status "$at_srcdir/auth.at:41"
+at_fn_check_status 1 $at_status "$at_srcdir/auth.at:59"
 $at_failed && at_fn_log_failure  \
 "input" \
 "server.cfg"
@@ -2792,4 +3055,4 @@ $at_traceon; }
   $at_times_p && times >"$at_times_file"
 ) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
-#AT_STOP_15
+#AT_STOP_20

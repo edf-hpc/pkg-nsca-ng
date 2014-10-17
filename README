@@ -2,7 +2,7 @@ Welcome to NSCA-ng!
 ===================
 
 The NSCA-ng package provides a client-server pair which makes the "Nagios
-command file" accessible from remote systems.  This allows for submitting
+command file" accessible to remote systems.  This allows for submitting
 passive check results, downtimes, and many other [commands][1] to Nagios (or
 compatible monitoring solutions).
 
@@ -28,10 +28,14 @@ Prerequisites
     `./build-aux/make-confuse` script could be run before calling
     `./configure`.
 
-3.  If [libev][5] 4.00 or newer is pre-installed and found by the
-    `./configure` script, NSCA-ng will (by default) use it.  Otherwise, a
-    bundled copy of libev is (by default) embedded into NSCA-ng, so this
-    dependency is optional.
+3.  If [libev][5] 4.00 or newer is available and found by the `./configure`
+    script, NSCA-ng will (by default) use it.  Otherwise, a bundled copy of
+    libev is embedded into NSCA-ng, so this dependency is optional.
+
+4.  Optional [systemd][6] integration code is added to the NSCA-ng *server*
+    if systemd's `sd-daemon(3)` library is found.  This can be disabled by
+    specifying the `--without-systemd` option on the `./configure` command
+    line.
 
 Installation
 ------------
@@ -71,7 +75,7 @@ frequently used `./configure` options include:
 * `--with-confuse=PATH`
 
     Search for the libConfuse header files in `PATH/include`, and search for
-    the libConfuse library files in ``PATH/lib`.  If this option isn't
+    the libConfuse library files in `PATH/lib`.  If this option isn't
     specified, `./configure` will look for libConfuse in a few typical
     locations.
 
@@ -147,13 +151,14 @@ Support
 
 Bug reports and patches can be sent to the <developers@nsca-ng.org> list (no
 subscription required).  For usage support, please subscribe to the
-<users@nsca-ng.org> list.  See the [NSCA-ng][6] website for details.
+<users@nsca-ng.org> list.  See the [NSCA-ng][7] website for details.
 
 [1]: http://www.nagios.org/developerinfo/externalcommands/
 [2]: http://tools.ietf.org/html/rfc4279
 [3]: http://www.openssl.org/
 [4]: http://www.nongnu.org/confuse/
 [5]: http://libev.schmorp.de/
-[6]: http://www.nsca-ng.org/
+[6]: http://www.freedesktop.org/wiki/Software/systemd/
+[7]: http://www.nsca-ng.org/
 
 <!-- vim:set filetype=markdown textwidth=76 joinspaces: -->

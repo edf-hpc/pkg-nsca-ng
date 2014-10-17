@@ -1,9 +1,18 @@
-nsca-ng (1.0-1) UNRELEASED; urgency=low
+nsca-ng (1.2-1) unstable; urgency=low
+
+  * [594ee2f] Imported Upstream version 1.2
+
+ -- Alexander Wirt <formorer@debian.org>  Thu, 07 Nov 2013 07:06:20 +0100
+
+nsca-ng (1.1-1) unstable; urgency=low
 
   * [47cbbe8] Remove unused file
-  * [3f96ec7] Imported Upstream version 1.0
+  * [6a8c9fc] Fix piddir generation in postinst
+              (Closes: #705377)
+  * [9e0c4dc] Imported Upstream version 1.1
+  * [126f404] Update nsca-ng.cfg_debian_config
 
- -- Alexander Wirt <alexander.wirt@credativ.de>  Sat, 16 Mar 2013 11:13:02 +0100
+ -- Alexander Wirt <formorer@debian.org>  Sun, 14 Apr 2013 07:59:55 +0200
 
 nsca-ng (0.3-1) unstable; urgency=low
 
