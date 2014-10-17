@@ -28,7 +28,7 @@
 ACLOCAL_AMFLAGS = -I m4
 EXTRA_DIST = ChangeLog PROTOCOL autogen.sh
 
-SUBDIRS = lib src man etc build-aux contrib tests
+SUBDIRS = lib src man etc build-aux contrib python tests
 
 #
 # The ChangeLog file is auto-generated from the Git history.  We let it depend
