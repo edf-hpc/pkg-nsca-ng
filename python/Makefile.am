@@ -1,6 +1,6 @@
 ## Process this file with automake(1) to produce Makefile.in.
 
-## Copyright (c) 2013 Holger Weiss <holger@weiss.in-berlin.de>
+## Copyright (c) 2014 Holger Weiss <holger@weiss.in-berlin.de>
 ## All rights reserved.
 ##
 ## Redistribution and use in source and binary forms, with or without
@@ -25,42 +25,7 @@
 ## ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 ## POSSIBILITY OF SUCH DAMAGE.
 
-AM_CPPFLAGS =                           \
-  -DSYSCONFDIR='"$(sysconfdir)"'        \
-  -DLOCALSTATEDIR='"$(localstatedir)"'  \
-  -I$(top_srcdir)/src/common            \
-  -I$(top_srcdir)/lib                   \
-  $(CONFUSECPPFLAGS)                    \
-  $(EVCPPFLAGS)                         \
-  $(SSLCPPFLAGS)                        \
-  $(SYSTEMDLDFLAGS)
+EXTRA_DIST = PKG-INFO client.c client.h nscang.c setup.py uthash.h
 
-AM_LDFLAGS =                            \
-  $(CONFUSELDFLAGS)                     \
-  $(EVLDFLAGS)                          \
-  $(SSLLDFLAGS)                         \
-  $(SYSTEMDLDFLAGS)
-
-LDADD =                                 \
-  ../common/libcommon.a                 \
-  ../../lib/libcompat.a                 \
-  $(CONFUSELIBS)                        \
-  $(EVLIBS)                             \
-  $(SSLLIBS)                            \
-  $(SYSTEMDLIBS)                        \
-  $(AIOLIBS)                            \
-  $(PIDFILELIBS)
-
-if USE_EMBEDDED_EV
-AM_CPPFLAGS += -I$(top_srcdir)/lib/ev
-LDADD += ../../lib/ev/libev.a
-endif
-
-if USE_EMBEDDED_PIDFILE
-AM_CPPFLAGS += -I$(top_srcdir)/lib/pidfile
-LDADD += ../../lib/pidfile/libpidfile.a
-endif
-
-sbin_PROGRAMS = nsca-ng
-nsca_ng_SOURCES = auth.c auth.h conf.c conf.h fifo.c fifo.h hash.c hash.h \
-                  nsca-ng.c server.c server.h
+clean-local:
+	-rm -rf build
