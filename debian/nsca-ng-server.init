@@ -30,7 +30,7 @@ CFGFILE="/etc/nsca-ng/nsca-ng.cfg"
 [ -r "/etc/default/${NAME}-server" ] && . "/etc/default/${NAME}-server"
 
 # Define LSB log_* functions.
-. '/lib/lsb/init-functions'
+. /lib/lsb/init-functions
 
 # Load the VERBOSE setting and other rcS variables
 . /lib/init/vars.sh
