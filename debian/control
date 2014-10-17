@@ -11,7 +11,7 @@ Build-Depends: autotools-dev,
                libbsd-dev,
                libssl-dev,
                libsystemd-dev
-Standards-Version: 3.9.3
+Standards-Version: 3.9.6
 Homepage: http://www.nsca-ng.org/
 
 Package: nsca-ng-client
