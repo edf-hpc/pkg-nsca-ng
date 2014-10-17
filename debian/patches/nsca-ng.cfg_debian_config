@@ -31,8 +31,8 @@ Author: Alexander Wirt <formorer@debian.org>
  #
  # 	listen = "monitoring.example.com:5668"  # Default: "*".
 @@ -105,6 +121,9 @@
- # commands), at least one "commands" and/or "services" expression must be
- # specified.
+ # commands), at least one "commands", "hosts", and/or "services" expression must
+ # be specified.
  #
 +# This authorization line only allows pinging of the server, but you probably
 +# want to change the password if you go into production
