@@ -4,10 +4,13 @@ Priority: extra
 Maintainer: Alexander Wirt <formorer@debian.org>
 Build-Depends: autotools-dev,
                debhelper (>= 9),
+               dh-autoreconf,
+               dh-systemd,
                libconfuse-dev,
                libev-dev,
                libbsd-dev,
-               libssl-dev
+               libssl-dev,
+               libsystemd-dev
 Standards-Version: 3.9.3
 Homepage: http://www.nsca-ng.org/
 
