@@ -1,3 +1,9 @@
+nsca-ng (1.4-2) unstable; urgency=medium
+
+  * [3928f0d] Create /var/run/nsca-ng if started via systemd (Closes: #784431)
+
+ -- Alexander Wirt <formorer@debian.org>  Fri, 19 Jun 2015 14:09:00 +0200
+
 nsca-ng (1.4-1) unstable; urgency=medium
 
   * [681226d] Fix postinst
