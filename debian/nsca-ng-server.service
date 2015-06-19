@@ -4,6 +4,8 @@ Documentation=man:nsca-ng(8) man:nsca-ng.cfg(5)
 Requires=nsca-ng-server.socket
 
 [Service]
+ExecStartPre=-/usr/bin/mkdir /var/run/nsca-ng
+ExecStartPre=/usr/bin/chown -R nagios:nagios /var/run/nsca-ng/
 ExecStart=/usr/sbin/nsca-ng -c /etc/nsca-ng/nsca-ng.cfg
 Type=notify
 StandardError=syslog
