@@ -4,9 +4,9 @@ m4_define([AT_PACKAGE_NAME],
 m4_define([AT_PACKAGE_TARNAME],
  [nsca-ng])
 m4_define([AT_PACKAGE_VERSION],
- [1.4])
+ [1.5])
 m4_define([AT_PACKAGE_STRING],
- [NSCA-ng 1.4])
+ [NSCA-ng 1.5])
 m4_define([AT_PACKAGE_BUGREPORT],
  [developers@nsca-ng.org])
 m4_define([AT_PACKAGE_URL],

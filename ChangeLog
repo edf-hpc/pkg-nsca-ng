@@ -1,3 +1,222 @@
+2016-11-15  Holger Weiss  <holger@weiss.in-berlin.de>
+
+	* NEWS, configure.ac: NSCA-ng 1.5
+
+	* build-aux/make-openssl: Adjust to new web site
+
+	Determine the current OpenSSL version by parsing the redesigned OpenSSL
+	web site.
+
+	* .coverity.yml: Add Coverity Scan configuration
+
+	Issues in tests/test_nsca.c should be ignored.
+
+	* COPYING, lib/ev/ev.c, lib/ev/ev.h, lib/ev/ev_epoll.c,
+	lib/ev/ev_win32.c: Update embedded libev code to version 4.22
+
+	Update our copy of libev from version 4.19 to version 4.22.  The new
+	release provides a few bug fixes.
+
+	* perl/uthash.h, python/uthash.h: Perl/Python modules: Update uthash.h
+
+	Grab the current version from the uthash repository (commit ID:
+	e7f4693a8dccaac0a7379b107df5197c1b232891).
+
+	* AUTHORS, COPYING: Perl module: Add authorship/copyright notices
+
+	* perl/Client.xs, perl/MANIFEST, perl/README,
+	perl/lib/Net/NSCAng/Client.pm: Perl module: Apply whitespace changes
+
+	Remove trailing whitespace and empty lines.
+
+	* Makefile.am, configure.ac, perl/Makefile.am: Add perl/Makefile.am file
+
+	Include the Perl module with our source tarballs.
+
+	* m4/openssl.m4, src/common/tls.c: Update code to work with OpenSSL 1.1
+
+2016-09-16  Matthias Bethke  <matthias.bethke@financial.com>
+
+	* perl/MANIFEST, perl/Makefile.PL, perl/t/001_load.t,
+	perl/t/Net-NSCAng-Client.t: add separate t/001_load.t; list
+	Test::CheckManifest dependency
+
+2016-09-15  Matthias Bethke  <matthias.bethke@financial.com>
+
+	* perl/t/Net-NSCAng-Client.t: fix number of tests
+
+	* perl/lib/Net/NSCAng/Client.pm: augment docs
+
+	* perl/t/Net-NSCAng-Client.t: add simple test for command()
+
+	* perl/client.c: remove debug code
+
+2016-09-14  Matthias Bethke  <matthias.bethke@financial.com>
+
+	* perl/client.c, perl/lib/Net/NSCAng/Client.pm: simplify, fix and
+	document command() method
+
+	* perl/client.c: CRLF-terminate PUSH
+
+	* perl/Client.xs, perl/Makefile.PL, perl/client.c, perl/client.h,
+	perl/lib/Net/NSCAng/Client.pm: add command() method
+
+2016-09-12  Matthias Bethke  <matthias.bethke@financial.com>
+
+	* perl/MANIFEST, perl/Makefile.PL, perl/t/manifest.t, perl/t/pod.t: add
+	POD and MANIFEST tests
+
+	* perl/Changes, perl/Makefile.PL: updated to v1.0.0
+
+	* perl/lib/Net/NSCAng/Client.pm: add :rcodes and :all export tags
+
+	* perl/.gitignore: add blib/
+
+2015-10-06  Matthias Bethke  <matthias.bethke@financial.com>
+
+	* perl/Changes, perl/lib/Net/NSCAng/Client.pm: bump version
+
+	* perl/Makefile.PL: use Devel::CheckLib to verify OpenSSL usability
+
+2015-09-27  Matthias Bethke  <matthias.bethke@financial.com>
+
+	* perl/Changes, perl/lib/Net/NSCAng/Client.pm: bump version
+
+	* perl/Makefile.PL: actually use libeopenssl if found ...
+
+	* perl/Makefile.PL: try OpenBSD's libeopenssl first to avoid LibreSSL
+
+	* perl/t/Net-NSCAng-Client.t: warn on threaded perls
+
+	* perl/t/Net-NSCAng-Client.t: add test plan at beginning; bail out on
+	use error
+
+2015-09-01  Matthias Bethke  <matthias.bethke@financial.com>
+
+	* perl/Changes, perl/Makefile.PL: add `dist' and `clean' args
+
+	* perl/Makefile.PL: add MIN_PERL_VERSION and repository information
+
+2015-08-31  Matthias Bethke  <matthias.bethke@financial.com>
+
+	* perl/Changes, perl/lib/Net/NSCAng/Client.pm: bump version
+
+	* perl/t/Net-NSCAng-Client.t: attempt to fix problems with non-English
+	locales
+
+	A non-English locale would cause tests to fail. Now using POSIX::setlocale to
+	set it to "C" before.
+
+2015-08-28  Matthias Bethke  <matthias.bethke@financial.com>
+
+	* perl/lib/Net/NSCAng/Client.pm: fix POD typos
+
+	* perl/Changes: add changes for 0.02
+
+2015-08-25  Matthias Bethke  <matthias.bethke@financial.com>
+
+	* perl/lib/Net/NSCAng/Client.pm: bump version; fix documentation
+
+	* document the constructor's "timeout" tag
+	* fix doc prototype of *_result methods
+
+	* perl/MANIFEST: add missing files to MANIFEST
+
+	* perl/lib/Net/NSCAng/Client.pm: remove reference to exception handling
+	bugs
+
+2015-08-24  Matthias Bethke  <matthias.bethke@financial.com>
+
+	* perl/Client.xs, perl/lib/Net/NSCAng/Client.pm: reinit client libray on
+	error
+
+	This fixes the problem that the object could be left in an inconsistent state if
+	an exception occurred and thus had to be recycled by the caller.
+
+	* perl/t/Net-NSCAng-Client.t: revert to tests with recycled objects
+
+	* perl/client.h: update copyright
+
+2015-08-21  Matthias Bethke  <matthias.bethke@financial.com>
+
+	* perl/Makefile.PL: using ExtUtils::PkgConfig to check for OpenSSL
+
+	* perl/lib/Net/NSCAng/Client.pm: change abstract
+
+2015-08-20  Matthias Bethke  <matthias.bethke@financial.com>
+
+	* perl/t/Net-NSCAng-Client.t: retry each test with a fresh object
+
+	* perl/Client.xs: free potentially allocated bits if an error occurs
+
+	* perl/lib/Net/NSCAng/Client.pm: update docs regarding exceptions
+
+2015-08-19  Matthias Bethke  <matthias.bethke@financial.com>
+
+	* python/nscang.c: fix error message in nscang_host_result()
+
+	* perl/lib/Net/NSCAng/Client.pm: some doc improvements
+
+	* perl/.gitignore: add Client.bs
+
+	* perl/README: remove boilerplate
+
+	* perl/Client.xs: fix object attribute assignment
+
+	* perl/t/Net-NSCAng-Client.t: add some tests
+
+	* perl/Makefile.PL: add test requirements
+
+	* perl/lib/Net/NSCAng/Client.pm: change argument passing; documented
+
+	* perl/Client.xs: add checks for missing node_name/svc_description
+
+2015-08-18  Matthias Bethke  <matthias.bethke@financial.com>
+
+	* perl/.gitignore: add .gitignore
+
+	* perl/ppport.h: add ppport header
+
+	* perl/t/Net-NSCAng-Client.t: add test skeleton
+
+	* perl/uthash.h: add uthash header
+
+	* perl/client.h: convert preprocessor macros to enums
+
+	* perl/Client.xs, perl/lib/Net/NSCAng/Client.pm: unify host and service
+	status methods
+
+	* perl/client.c: remove pthreads dependency that would break on Perl
+
+	* perl/Client.xs: move args into constructor; flesh out methods
+
+	* perl/lib/Net/NSCAng/Client.pm: add Perl wrapper file
+
+	* perl/Client.xs: remove some redundancy; rename host param
+
+	* perl/Changes, perl/Client.xs, perl/MANIFEST, perl/Makefile.PL,
+	perl/README, perl/README.md, perl/client.c, perl/client.h, perl/typemap:
+	XS skeleton set up with new and DESTROY
+
+2014-10-17  Holger Weiss  <holger@weiss.in-berlin.de>
+
+	* COPYING, lib/ev/ev.c, lib/ev/ev.h, lib/ev/ev_epoll.c,
+	lib/ev/ev_kqueue.c, lib/ev/ev_vars.h, lib/ev/ev_win32.c: Update embedded
+	libev code to version 4.19
+
+	Update our copy of libev from version 4.15 to version 4.19.  The new
+	release provides a number of bug fixes and small enhancements.
+
+	* etc/Makefile.am: Include systemd(1) configuration with release
+
+	Add the systemd.service(5) and systemd.socket(5) files to the release
+	tarball.
+
+	* m4/systemd.m4: Use libsystemd instead of libsystemd-daemon
+
+	With systemd(1) version 210, libsystemd-daemon has been merged into
+	libsystemd.
+
 2014-10-14  Holger Weiss  <holger@weiss.in-berlin.de>
 
 	* NEWS, configure.ac: NSCA-ng 1.4
