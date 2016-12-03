@@ -29,7 +29,7 @@ Package: nsca-ng-server
 Architecture: any
 Section: net
 Depends: adduser, ${misc:Depends}, ${shlibs:Depends}
-Recommends: icinga
+Recommends: icinga-core
 Description: Monitoring command acceptor
  The NSCA-ng server makes the Icinga command file accessible from remote
  systems.  This allows for submitting passive check results, downtimes, and many
