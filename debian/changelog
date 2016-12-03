@@ -1,3 +1,13 @@
+nsca-ng (1.5-1) unstable; urgency=medium
+
+  * [a040168] Use Icinga instead of Nagios (nagios3 removed from Debian).
+    Thanks to Bas Couwenberg for the patch (Closes: #846867)
+  * [1ccccc8] New upstream version 1.5 (Closes: #846000)
+    - Fix ftbfs with OpenSSL 1.1.0 (Closes: #828459)
+  * Depend on icinga-core instead of icinga (Closes: #768003)
+
+ -- Alexander Wirt <formorer@debian.org>  Sat, 03 Dec 2016 21:57:17 +0100
+
 nsca-ng (1.4-2) unstable; urgency=medium
 
   * [3928f0d] Create /var/run/nsca-ng if started via systemd (Closes: #784431)
