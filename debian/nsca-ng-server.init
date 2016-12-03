@@ -4,15 +4,15 @@
 # Provides:          nsca-ng
 # Required-Start:    $remote_fs $network $syslog
 # Required-Stop:     $remote_fs $network $syslog
-# Should-Start:      $named nagios3 icinga
-# Should-Stop:       $named nagios3 icinga
+# Should-Start:      $named icinga
+# Should-Stop:       $named icinga
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
 # Short-Description: Accept monitoring commands
-# Description:       The NSCA-ng server makes the Nagios command file accessible
+# Description:       The NSCA-ng server makes the Icinga command file accessible
 #                    from remote systems.  This allows for submitting passive
-#                    check results, downtimes, and many other commands to Nagios
-#                    or Icinga.
+#                    check results, downtimes, and many other commands to
+#                    Icinga.
 ### END INIT INFO
 
 PATH='/sbin:/usr/sbin:/bin:/usr/bin'

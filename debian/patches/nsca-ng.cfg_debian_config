@@ -3,17 +3,17 @@ Author: Alexander Wirt <formorer@debian.org>
 
 --- a/etc/nsca-ng.cfg
 +++ b/etc/nsca-ng.cfg
-@@ -8,9 +8,28 @@
+@@ -6,11 +6,27 @@
  #
- # Most probably, you'll have to specify the path to the Nagios command file.
+ 
+ #
+-# Most probably, you'll have to specify the path to the Nagios command file.
++# Most probably, you'll have to specify the path to the Icinga command file.
  #
 -command_file = "/usr/local/nagios/var/rw/nagios.cmd"
 +
-+# command_file for nagios3
-+command_file = "/var/lib/nagios3/rw/nagios.cmd"
-+
 +# command_file for icinga
-+#command_file= "/var/lib/icinga/rw/icinga.cmd"
++command_file= "/var/lib/icinga/rw/icinga.cmd"
 +
 +# Debian specific settings
 +listen = "localhost:5668" # only listen on localhost. If you use systemd this
@@ -33,7 +33,7 @@ Author: Alexander Wirt <formorer@debian.org>
  # These configuration settings are optional.
  #
  # 	listen = "monitoring.example.com:5668"  # Default: "*".
-@@ -105,6 +124,9 @@
+@@ -105,6 +121,9 @@ command_file = "/usr/local/nagios/var/rw
  # commands), at least one "commands", "hosts", and/or "services" expression must
  # be specified.
  #

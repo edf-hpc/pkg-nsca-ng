@@ -29,11 +29,11 @@ Package: nsca-ng-server
 Architecture: any
 Section: net
 Depends: adduser, ${misc:Depends}, ${shlibs:Depends}
-Recommends: nagios3 | icinga
+Recommends: icinga
 Description: Monitoring command acceptor
- The NSCA-ng server makes the Nagios command file accessible from remote
+ The NSCA-ng server makes the Icinga command file accessible from remote
  systems.  This allows for submitting passive check results, downtimes, and many
- other commands to Nagios or Icinga.
+ other commands to Icinga.
  .
  The communication with clients is TLS
  encrypted and authenticated using pre-shared keys (as per RFC 4279).  The
