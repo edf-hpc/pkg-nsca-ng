@@ -4,6 +4,7 @@ nsca-ng (1.5-2) UNRELEASED; urgency=medium
   * Add Vcs-* fields to control file.
   * Change Maintainer to Debian Nagios Maintainer Group,
     move Alexander Wirt to Uploaders.
+  * Update watch file to handle common issues.
 
  -- Bas Couwenberg <sebastic@debian.org>  Fri, 16 Dec 2016 17:50:30 +0100
 
