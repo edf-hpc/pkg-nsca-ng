@@ -21,8 +21,9 @@ Package: nsca-ng-client
 Architecture: any
 Depends: ${misc:Depends},
          ${shlibs:Depends}
-Conflicts: nsca (<< 2.9.1-1),
-           nsca-client
+Breaks: nsca (<< 2.9.1-1)
+Conflicts: nsca-client
+Replaces: nsca (<< 2.9.1-1)
 Description: Send monitoring commands to NSCA-ng server
  The send_nsca utility transmits one or more check results or
  monitoring commands to an NSCA-ng server.
