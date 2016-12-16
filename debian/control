@@ -1,8 +1,8 @@
 Source: nsca-ng
-Section: net
-Priority: extra
 Maintainer: Debian Nagios Maintainer Group <pkg-nagios-devel@lists.alioth.debian.org>
 Uploaders: Alexander Wirt <formorer@debian.org>
+Section: net
+Priority: extra
 Build-Depends: autotools-dev,
                debhelper (>= 9),
                dh-autoreconf,
@@ -19,8 +19,10 @@ Homepage: http://www.nsca-ng.org/
 
 Package: nsca-ng-client
 Architecture: any
-Depends: ${misc:Depends}, ${shlibs:Depends}
-Conflicts: nsca (<< 2.9.1-1), nsca-client
+Depends: ${misc:Depends},
+         ${shlibs:Depends}
+Conflicts: nsca (<< 2.9.1-1),
+           nsca-client
 Description: Send monitoring commands to NSCA-ng server
  The send_nsca utility transmits one or more check results or
  monitoring commands to an NSCA-ng server.
@@ -31,7 +33,9 @@ Description: Send monitoring commands to NSCA-ng server
 Package: nsca-ng-server
 Architecture: any
 Section: net
-Depends: adduser, ${misc:Depends}, ${shlibs:Depends}
+Depends: adduser,
+         ${misc:Depends},
+         ${shlibs:Depends}
 Recommends: icinga-core
 Description: Monitoring command acceptor
  The NSCA-ng server makes the Icinga command file accessible from remote
