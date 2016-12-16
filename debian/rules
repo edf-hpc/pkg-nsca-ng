@@ -9,6 +9,9 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
+# Enable hardening build flags
+export DEB_BUILD_MAINT_OPTIONS=hardening=+all
+
 %:
 	dh $@  --with autotools-dev,autoreconf,systemd
 
