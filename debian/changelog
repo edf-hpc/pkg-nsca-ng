@@ -16,6 +16,7 @@ nsca-ng (1.5-2) UNRELEASED; urgency=medium
   * Change Conflicts with version to Breaks/Replaces.
   * Update nsca-ng-server init script to also provide itself.
   * Add lintian override for manpage-has-errors-from-man.
+  * Bump Standards-Version to 3.9.8, no changes.
 
  -- Bas Couwenberg <sebastic@debian.org>  Fri, 16 Dec 2016 17:50:30 +0100
 
