@@ -15,6 +15,7 @@ nsca-ng (1.5-2) UNRELEASED; urgency=medium
   * Add lsb-base dependency for nsca-ng-server init script.
   * Change Conflicts with version to Breaks/Replaces.
   * Update nsca-ng-server init script to also provide itself.
+  * Add lintian override for manpage-has-errors-from-man.
 
  -- Bas Couwenberg <sebastic@debian.org>  Fri, 16 Dec 2016 17:50:30 +0100
 
