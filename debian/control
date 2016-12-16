@@ -33,6 +33,7 @@ Description: Send monitoring commands to NSCA-ng server
 Package: nsca-ng-server
 Architecture: any
 Depends: adduser,
+         lsb-base,
          ${misc:Depends},
          ${shlibs:Depends}
 Recommends: icinga-core
