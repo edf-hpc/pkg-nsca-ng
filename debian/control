@@ -32,7 +32,6 @@ Description: Send monitoring commands to NSCA-ng server
 
 Package: nsca-ng-server
 Architecture: any
-Section: net
 Depends: adduser,
          ${misc:Depends},
          ${shlibs:Depends}
