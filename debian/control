@@ -12,6 +12,8 @@ Build-Depends: autotools-dev,
                libssl-dev,
                libsystemd-dev
 Standards-Version: 3.9.6
+Vcs-Browser: https://anonscm.debian.org/cgit/pkg-nagios/pkg-nsca-ng.git
+Vcs-Git: https://anonscm.debian.org/git/pkg-nagios/pkg-nsca-ng.git
 Homepage: http://www.nsca-ng.org/
 
 Package: nsca-ng-client
