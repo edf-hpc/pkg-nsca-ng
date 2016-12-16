@@ -1,7 +1,8 @@
 Source: nsca-ng
 Section: net
 Priority: extra
-Maintainer: Alexander Wirt <formorer@debian.org>
+Maintainer: Debian Nagios Maintainer Group <pkg-nagios-devel@lists.alioth.debian.org>
+Uploaders: Alexander Wirt <formorer@debian.org>
 Build-Depends: autotools-dev,
                debhelper (>= 9),
                dh-autoreconf,
