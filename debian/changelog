@@ -1,3 +1,9 @@
+nsca-ng (1.4-2~calibre9+1) calibre9; urgency=medium
+
+  * Backport to Calibre9
+
+ -- Rémi Palancher <remi-externe.palancher@edf.fr>  Mon, 02 Jan 2017 11:34:45 +0100
+
 nsca-ng (1.4-2) unstable; urgency=medium
 
   * [3928f0d] Create /var/run/nsca-ng if started via systemd (Closes: #784431)
